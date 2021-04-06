@@ -1,0 +1,118 @@
+#! /bin/bash
+
+#laço de repetição infinito
+while true 1 == 1
+do
+
+	#Apresentando o menu principal
+        echo ""
+        echo "Selecione uma opcao"
+        echo "1 - Atribuir permissao"
+	echo "2 - Mostrar permissao do arquivo"
+	echo "0 - Sair"
+
+	#lendo a opção digitada pelo usuário
+        read opcao
+	clear
+
+        #Executando funções conforme opção escolhida
+        case $opcao in
+       		#Atribuir permissão
+                1)
+			#Solicitando o diretório onde está o arquivo que será dado a permissão
+			echo ""
+			echo "Digite o diretorio onde esta o arquivo desejado (ex: /pasta1/pasta2)"
+			read diretorio_atribuir
+
+			#Verificando se o diretório existe
+			if [ ! -d $diretorio_atribuir ]; then
+				echo ""
+				echo "O diretorio nao existe!"
+			else
+				#Mostrando os arquivos que estão dentro do diretório digitado
+				echo ""
+				echo "Arquivos do diretorio digitado"
+				cd $diretorio_atribuir
+				ls
+
+				#Solicitando o nome do arquivo que será dado a permissão
+				echo ""
+				echo "Digite o nome do arquivo"
+				read nome_atribuir
+
+				#Verificando se o arquivo existe
+				if [ ! -e $diretorio_atribuir/$nome_atribuir ]; then
+					echo ""
+					echo "O arquivo $nome_atribuir nao existe"
+				else
+					#Mostrando a sequência de permissão
+					echo ""
+					echo "Digite as permissoes escolhidas para o arquivos $nome_atribuir."
+					echo "A sequencia de permisao sera para: U		G		O"
+					echo "				   |		|		|"
+					echo "		              usuario Raiz    Grupos      Outros usuarios"
+					echo ""
+
+					#mostrando quais números tem que ser digitado e o nível de permissão que cada número dá
+					# R = READ (LER), W = WRITE (ESCREVER), X = EXECUTE (EXECUTAR)
+					echo "Decimal		Permissoes"
+					echo "0			- - -"
+					echo "1			- - x"
+					echo "2			- w -"
+					echo "3			- w x"
+					echo "4			r - -"
+					echo "5			r - x"
+					echo "6			r w -"
+					echo "7			r w r"
+					echo ""
+
+					#Solicitando as permissões
+					echo "digite as permissoes:"
+					read permissao
+
+					#Verificando se foi digitado 3 digitos, ou seja, permissões para o DONO, GRUPOS E OUTROS USUÁRIOS
+					if [ ${#permissao} == 3 ]; then
+												#Atribuindo as permissões ao arquivo
+                                               echo ""
+                                               chmod $permissao $nome_atribuir
+                                                echo "Permissoes atribuidas!"
+                                        else
+                                               echo ""
+                                               echo "A quantidade de permissoes digitadas nao e compativel!"
+                                        fi
+
+				fi
+			fi
+		;;
+
+		#Mostrar permissao do arquivo
+		2)
+			#Solicitando o diretório onde será mostrado as permissões
+			echo ""
+			echo "Digite o diretorio onde esta o arquivo desejado (ex: /pasta1/pasta2)"
+			read diretorio_arquivo
+
+			#Verificando se o diretório existe
+			if [ ! -d $diretorio_arquivo ]; then
+                                echo ""
+                                echo "O diretorio nao existe!"
+                        else
+                                echo ""
+                                echo "Arquivos do diretorio digitado"
+                                cd $diretorio_arquivo
+				ls -lh
+			fi
+		;;
+
+		#Sair do script
+		0)
+			#Saindo do script
+			echo ""
+			echo "Saindo..."
+			sleep 2
+			clear
+			exit
+		;;
+
+	esac
+done
